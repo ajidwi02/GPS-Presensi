@@ -93,4 +93,12 @@ Route::middleware(['auth:user'])->group(function(){
     // Konfigurasi
     Route::get('/konfigurasi/lokasiKampus', [konfigurasiController::class, 'lokasiKampus']);
     Route::post('/konfigurasi/updatelokasiKampus', [konfigurasiController::class, 'updatelokasiKampus']);
+    Route::get('/konfigurasi/jammatkul', [konfigurasiController::class, 'jammatkul']);
+    Route::post('/konfigurasi/storejammatkul', [konfigurasiController::class, 'storejammatkul']);
+    Route::post('/konfigurasi/editjammatkul', [konfigurasiController::class, 'editjammatkul']);
+    Route::post('/konfigurasi/updatejammatkul', [konfigurasiController::class, 'updatejammatkul']);
+    Route::post('/konfigurasi/{kode_jam_matkul}/delete', [konfigurasiController::class, 'deletejammatkul']);
+    Route::get('/konfigurasi/{nim}/setjammatkul', [konfigurasiController::class, 'setjammatkul']);
+    Route::post('/konfigurasi/storesetjammatkul', [konfigurasiController::class, 'storesetjammatkul']);
+    Route::post('/konfigurasi/updatesetjammatkul', [konfigurasiController::class, 'updatesetjammatkul']);
 });

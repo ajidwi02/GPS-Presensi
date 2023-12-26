@@ -31,7 +31,10 @@ class ProdiController extends Controller
             'kode_prodi' => $kode_prodi,
             'nama_prodi' => $nama_prodi
         ];
-
+        $cek = DB::table('prodi')->where('kode_prodi', $kode_prodi)->count();
+        if($cek>0){
+            return Redirect::back()->with(['warning'=> 'Data Prodi '.$kode_prodi. ' sudah ada']);
+        }
         $simpan = DB::table('prodi')->insert($data);
         if($simpan){
             return Redirect::back()->with(['success' => 'Data berhasil disimpan']);
@@ -64,9 +67,9 @@ class ProdiController extends Controller
     public function delete($kode_prodi){
         $hapus = DB::table('prodi')->where('kode_prodi', $kode_prodi)->delete();
         if($hapus){
-            return Redirect::back()->with(['success' => 'Data berhasil diupadte']);
+            return Redirect::back()->with(['success' => 'Data berhasil dihapus']);
         } else {
-            return Redirect::back()->with(['warning' => 'Data gagal diupadte']);
+            return Redirect::back()->with(['warning' => 'Data gagal dihapus']);
         }
     }
 }

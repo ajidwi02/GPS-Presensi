@@ -268,6 +268,13 @@ class PresensiController extends Controller
         ->whereRaw('YEAR(tgl_presensi)="'.$tahun.'"')
         ->orderBy('tgl_presensi')
         ->get();
+
+        if(isset($_POST['exportexcel'])){
+            $time = date("d-M-Y H:i:s");
+            header("Content-type: application/vnd-ms-excel");
+            header("Content-Disposition: attachment; filename=Laporan Presensi Mahasiswa $time.xls");
+            return view('presensi.cetaklaporanexcel', compact('bulan', 'tahun', 'nama_bulan', 'mahasiswa', 'presensi'));
+        }
         return view('presensi.cetaklaporan', compact('bulan', 'tahun', 'nama_bulan', 'mahasiswa', 'presensi'));
     }
 
@@ -318,7 +325,12 @@ class PresensiController extends Controller
         ->whereRaw('YEAR(tgl_presensi)="'.$tahun.'"')
         ->groupByRaw('presensi.nim, nama_lengkap')
         ->get();
-        
+
+        if(isset($_POST['exportexcel'])){
+            $time = date("d-M-Y H:i:s");
+            header("Content-type: application/vnd-ms-excel");
+            header("Content-Disposition: attachment; filename=Rekap Presensi Mahasiswa $time.xls");
+        }
         return view('presensi.cetakrekap', compact('bulan', 'tahun', 'rekap', 'nama_bulan'));
     }
 
@@ -344,7 +356,7 @@ class PresensiController extends Controller
         }
         
         $query->orderBy('tgl_izin', 'desc');
-        $izinsakit = $query->paginate(2);
+        $izinsakit = $query->paginate(10);
         $izinsakit->append($request->all());
         
         // $izinsakit = DB::table('pengajuan_izin')

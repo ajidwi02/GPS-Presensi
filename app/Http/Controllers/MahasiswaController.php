@@ -72,8 +72,10 @@ class MahasiswaController extends Controller
                 return Redirect::back()->with(['success' => 'Data berhasil disimpan']);
             } 
         } catch (\Exception $e) {
-            // dd($e);
-            return Redirect::back()->with(['warning' => 'Data gagal disimpan']);
+            if($e->getCode() == 23000){
+                $message=" data dengan NIM " .$nim. " sudah terdaftar";
+            }
+            return Redirect::back()->with(['warning' => 'Data gagal disimpan'.$message]);
         }
     }
 

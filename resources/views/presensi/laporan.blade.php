@@ -22,7 +22,7 @@
       <div class="col-6">
         <div class="card">
           <div class="card-body">
-            <form action="/presensi/cetaklaporan" target="_blank" method="POST" class="">
+            <form action="/presensi/cetaklaporan" id="frmlaporan" target="_blank" method="POST" class="">
               @csrf
               <div class="row mt-2">
                 <div class="col-12">
@@ -56,7 +56,7 @@
                 <div class="col-12">
                   <div class="form-group">
                     <select name="nim" id="nim" class="form-select">
-                      <option value="">Pilih Karyawan</option>
+                      <option value="">Mahasiswa</option>
                       @foreach ($mahasiswa as $d)
                           <option value="{{ $d->nim }}">{{ $d->nama_lengkap}}</option>
                       @endforeach
@@ -90,3 +90,45 @@
   </div>
 </div>
 @endsection
+@push('myscript')
+    <script>
+      $(function(){
+        $('#frmlaporan').submit(function(e){
+          var bulan = $("#bulan").val();
+          var tahun = $("#tahun").val();
+          var nim = $("#nim").val();
+          if(bulan==""){
+            Swal.fire({
+              title: "Perhatian",
+              text: "Bulan harus Dipilih!",
+              icon: "warning",
+              confirmButtonText: "Ok"
+            }).then((result)=> {
+              $("#bulan").focus();
+            });            
+            return false;
+          } else if(tahun == ""){
+            Swal.fire({
+              title: "Perhatian",
+              text: "Tahun harus Dipilih!",
+              icon: "warning",
+              confirmButtonText: "Ok"
+            }).then((result)=> {
+              $("#tahun").focus();
+            });            
+            return false;
+          } else if(nim == ""){
+            Swal.fire({
+              title: "Perhatian",
+              text: "Pilih Mahasiswa terlebih dahulu!",
+              icon: "warning",
+              confirmButtonText: "Ok"
+            }).then((result)=> {
+              $("#nim").focus();
+            });            
+            return false;
+          }
+        });
+      });
+    </script>
+@endpush
