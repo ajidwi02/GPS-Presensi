@@ -39,6 +39,7 @@
                       <th>NIM</th>
                       <th>Nama Mahasiswa</th>
                       <th>Prodi</th>
+                      <th>Jadwal Mata Kuliah</th>
                       <th>Jam Masuk</th>
                       <th>Foto</th>
                       <th>Jam Pulang</th>
