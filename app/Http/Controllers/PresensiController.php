@@ -13,13 +13,52 @@ use Illuminate\Support\Facades\Hash;
 
 class PresensiController extends Controller
 {
+    public function gethari(){
+        $hari = date("D");
+        
+        switch($hari){
+            case 'Sun':
+                $hari_ini = "Minggu";
+                break;
+            case 'Mon':
+                $hari_ini = "Senin";
+                break;
+            case 'Tue':
+                $hari_ini = "Selasa";
+                break;
+            case 'Wed':
+                $hari_ini = "Rabu";
+                break;
+            case 'Thu':
+                $hari_ini = "Kamis";
+                break;
+            case 'Fri':
+                $hari_ini = "Jum'at";
+                break;
+            case 'Sat':
+                $hari_ini = "Sabtu";
+                break;
+            default :
+                $hari_ini = "Tidak di ketahui";
+                break;    
+        } 
+        return $hari_ini;
+    }
+    
     public function create()
     {
         $hariini = date("Y-m-d");
+        $namahari = $this->gethari();
         $nim = Auth::guard('mahasiswa')->user()->nim;
         $cek = DB::table('presensi')->where('tgl_presensi', $hariini)->where('nim', $nim)->count();
         $lokasiKampus = DB::table('konfigurasi_lokasi')->where('id', 1)->first();
-        return view('presensi.create', compact('cek', 'lokasiKampus'));
+        $jam_matkul = DB::table('konfigurasi_jam_matkul')
+            ->join('jam_matkul', 'konfigurasi_jam_matkul.kode_jam_matkul','=','jam_matkul.kode_jam_matkul')
+            ->where('nim', $nim)
+            ->where('hari', $namahari)
+            ->first();
+        
+        return view('presensi.create', compact('cek', 'lokasiKampus', 'jam_matkul'));
     }
 
     public function store(Request $request)

@@ -16,6 +16,7 @@
     .logout:hover{
         color: white;
     }
+    
 </style>
 <div id="appCapsule">
     <div class="section" id="user-section">
@@ -34,7 +35,7 @@
                 @endif
             </div>
             <div id="user-info">
-                <h2 id="user-name">{{Auth::guard('mahasiswa')->user()->nama_lengkap}}</h2>
+                <h3 id="user-name">{{Auth::guard('mahasiswa')->user()->nama_lengkap}}</h3>
                 <span id="user-role">{{Auth::guard('mahasiswa')->user()->kelas}}</span>
             </div>
         </div>
