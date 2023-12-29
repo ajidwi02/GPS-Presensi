@@ -20,6 +20,7 @@ class DashboardController extends Controller
             ->first();
 
         $historibulanini = DB::table('presensi')
+            ->leftJoin('jam_matkul', 'presensi.kode_jam_matkul', '=', 'jam_matkul.kode_jam_matkul')
             ->where('nim', $nim)
             ->whereRaw('MONTH(tgl_presensi)="'.$bulanini.'"')
             ->whereRaw('YEAR(tgl_presensi)="' .$tahunini . '"')

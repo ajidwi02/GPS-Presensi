@@ -73,7 +73,9 @@ class MahasiswaController extends Controller
             } 
         } catch (\Exception $e) {
             if($e->getCode() == 23000){
-                $message=" data dengan NIM " .$nim. " sudah terdaftar";
+                $message = " data dengan NIM " .$nim. " sudah terdaftar";
+            } else {
+                $message = " Hubungi Technical Support!";
             }
             return Redirect::back()->with(['warning' => 'Data gagal disimpan'.$message]);
         }

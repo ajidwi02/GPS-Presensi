@@ -229,6 +229,7 @@
 
 @push('myscript')
     <script>
+      $("#awal_jam_masuk, #jam_masuk, #akhir_jam_masuk, #jam_pulang").mask("00:00:00");
       $(function(){
         $('#btnTambahJammatkul').click(function(){
           $("#modal-inputjm").modal('show');

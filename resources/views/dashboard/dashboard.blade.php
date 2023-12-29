@@ -201,11 +201,12 @@
             </div>
             <div class="tab-content mt-2" style="margin-bottom:100px;" >
                 <div class="tab-pane fade show active" id="home" role="tabpanel">
-                    <ul class="listview image-listview">
+                    
+                    {{-- <ul class="listview image-listview">
                         @foreach ($historibulanini as $d)
-                        {{-- @php
+                        @php
                             $path = Storage::url('upload/absensi'.$d->foto_in);
-                        @endphp --}}
+                        @endphp
                         <li>
                             <div class="item">
                                 <div class="icon-box bg-primary">
@@ -219,7 +220,55 @@
                             </div>
                         </li>
                         @endforeach
-                    </ul>
+                    </ul> --}}
+                    <style>
+                        .historicontent {
+                            display: flex;
+                        }
+
+                        .datapresensi{
+                            margin-left: 10px;
+                        }
+                    </style>
+                    @foreach ($historibulanini as $d)
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="historicontent">
+                                    <div class="iconpresensi">
+                                        <ion-icon name="browsers-outline" style="font-size: 48px" class="text-dark"></ion-icon>
+                                    </div>
+                                    <div class="datapresensi">
+                                        <h3 style="line-height: 2px" >{{ $d->nama_jam_matkul }}</h3>
+                                        <h4 style="margin: 0px !important">{{ date("d-m-Y", strtotime($d->tgl_presensi)) }}</h4>
+                                        <span>
+                                            {!! $d->jam_in != null ? date("H:i", strtotime($d->jam_in)) : '<span class="text-danger" >Belum Absen!</span>' !!}
+                                            {!! $d->jam_out != null ? "-". date("H:i", strtotime($d->jam_out)) : '<span class="text-danger" >- Belum Absen!</span>' !!}
+                                        </span>
+                                        <div class="mt-2" id="keterangan">
+                                            @php
+                                                //jam ketika absen
+                                                $jam_in = date("H:i", strtotime($d->jam_in));
+
+                                                //jam jadwal masuk
+                                                $jam_masuk = date("H:i", strtotime($d->jam_masuk));
+
+                                                $jadwal_jam_masuk = $d->tgl_presensi. " " . $jam_masuk;
+                                                $jam_presensi = $d->tgl_presensi. " " . $jam_in;
+                                            @endphp
+                                            @if ($jam_in > $jam_masuk)
+                                            @php
+                                                $jml_terlambat = hitungjamterlambat($jadwal_jam_masuk, $jam_presensi);
+                                            @endphp
+                                            <span class="danger">Terlambat {{ $jml_terlambat }}</span>
+                                            @else
+                                            <span style="color: green">Tepat waktu</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
                 <div class="tab-pane fade" id="profile" role="tabpanel">
                     <ul class="listview image-listview">

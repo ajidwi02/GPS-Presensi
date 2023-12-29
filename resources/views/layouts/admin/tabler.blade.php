@@ -81,7 +81,8 @@
     <script src="{{asset("tabler/dist/libs/jsvectormap/dist/maps/world-merc.js?1695847769")}}" defer></script>
     <!-- Tabler Core -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{asset ('assets/js/lib/sweetalert2@11.js')}}"></script>
+    <script src="{{asset ('assets/js/lib/jquery.mask.min.js')}}"></script>
     <script src="{{asset("tabler/dist/js/tabler.min.js?1695847769")}}" defer></script>
     <script src="{{asset("tabler/dist/js/demo.min.js?1695847769")}}" defer></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>

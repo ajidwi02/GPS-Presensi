@@ -13,6 +13,7 @@ class Mahasiswa extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
     protected $table = "mahasiswa";
     protected $primaryKey = "nim";
+    public $incrementing = false;
     protected $fillable = [
         'nim',
         'nama_lengkap',
