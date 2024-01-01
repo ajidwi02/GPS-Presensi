@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 
 class PresensiController extends Controller
@@ -50,6 +51,7 @@ class PresensiController extends Controller
         $hariini = date("Y-m-d");
         $namahari = $this->gethari();
         $nim = Auth::guard('mahasiswa')->user()->nim;
+        $kode_prodi = Auth::guard('mahasiswa')->user()->kode_prodi;
         $cek = DB::table('presensi')->where('tgl_presensi', $hariini)->where('nim', $nim)->count();
         $lokasiKampus = DB::table('konfigurasi_lokasi')->where('id', 1)->first();
         $jam_matkul = DB::table('konfigurasi_jam_matkul')
@@ -57,8 +59,21 @@ class PresensiController extends Controller
             ->where('nim', $nim)
             ->where('hari', $namahari)
             ->first();
+            
+        if($jam_matkul == null){
+            $jam_matkul = DB::table('konfigurasi_jm_kelas_detail')
+            ->join('konfigurasi_jm_kelas', 'konfigurasi_jm_kelas_detail.kode_jm_kelas','=','konfigurasi_jm_kelas.kode_jm_kelas')
+            ->join('jam_matkul', 'konfigurasi_jm_kelas_detail.kode_jam_matkul','=','jam_matkul.kode_jam_matkul')
+            ->where('kode_kelas', $kode_prodi)
+            ->where('hari', $namahari)
+            ->first();
+        }
         
-        return view('presensi.create', compact('cek', 'lokasiKampus', 'jam_matkul'));
+        if($jam_matkul == null){
+            return view('presensi.notifjadwal');
+        } else {
+            return view('presensi.create', compact('cek', 'lokasiKampus', 'jam_matkul'));
+        }
     }
 
     public function store(Request $request)
@@ -193,7 +208,9 @@ class PresensiController extends Controller
         $no_hp = $request->no_hp;
         $password = Hash::make($request->password);
         $mahasiswa= DB::table('mahasiswa')->where('nim', $nim)->first(); 
-        
+        $request->validate([
+            'foto' => 'required|image|mimes:png,jpg,jpeg|max:1024'
+        ]);
         if ($request->hasFile('foto')){
             $foto = $nim . "." . $request->file('foto')->getClientOriginalExtension();
         } else {

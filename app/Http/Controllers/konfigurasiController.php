@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Setjamkerja;
+use App\Models\Setjammatkulkelas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -165,5 +166,113 @@ class konfigurasiController extends Controller
         }
     }
 
+    public function jammatkulkelas(){
+        $jammatkulkelas =DB::table('konfigurasi_jm_kelas')
+            ->join('prodi', 'konfigurasi_jm_kelas.kode_kelas', '=', 'prodi.kode_prodi')
+            ->get();
+        
+        return view('konfigurasi.jammatkulkelas', compact('jammatkulkelas'));
+    }
+
+    public function createjammatkulkelas(){
+        $jammatkul = DB::table('jam_matkul')->orderBy('nama_jam_matkul')->get();
+        $kelas = DB::table('prodi')->get();
+        return view('konfigurasi.createjammatkulkelas', compact('jammatkul', 'kelas'));
+    }
+
+    public function storejammatkulkelas(Request $request){
+        $kode_kelas = $request->kode_kelas;
+        $hari = $request->hari;
+        $kodejammatkul = $request->kode_jam_matkul;
+        $kode_jm_kelas = 'J' . $kode_kelas;
+        
+        DB::beginTransaction();
+        try {
+            //Menyimpan data ke tabel konfigurasi_jm_kelas
+            DB::table('konfigurasi_jm_kelas')->insert([
+                'kode_jm_kelas' => $kode_jm_kelas,
+                'kode_kelas' => $kode_kelas
+            ]);
+
+            for($i=0; $i<count($hari);$i++){
+                $data[] = [
+                    'kode_jm_kelas' => $kode_jm_kelas,
+                    'hari' => $hari[$i],
+                    'kode_jam_matkul' => $kodejammatkul[$i]
+                ];
+            }
+            //diinput dalam tabel konfigurasi_jm_kelas_detail
+            Setjammatkulkelas::insert($data);
+            DB::commit();
+            return redirect('/konfigurasi/jammatkulkelas')->with(['success' => 'Data Berhasil Disimpan!']);
+        } catch (\Exception $e) {
+            //Jika eror akan ditarik ulang (Rollback)
+            DB::rollback();
+            return redirect('/konfigurasi/jammatkulkelas')->with(['warning' => 'Data Gagal Disimpan!']);
+        }
+    }
+
+    public function editjammatkulkelas($kode_jm_kelas){
+        $jammatkul = DB::table('jam_matkul')->orderBy('nama_jam_matkul')->get();
+        $kelas = DB::table('prodi')->get();
+        $jam_matkul_kelas = DB::table('konfigurasi_jm_kelas')
+            ->where('kode_jm_kelas', $kode_jm_kelas)
+            ->first();
+        $jam_matkul_kelas_detail = DB::table('konfigurasi_jm_kelas_detail')
+            ->where('kode_jm_kelas', $kode_jm_kelas)
+            ->get();
+        return view('konfigurasi.editjammatkulkelas', compact('jammatkul', 'kelas','jam_matkul_kelas','jam_matkul_kelas_detail'));
+    }
+
+    public function updatejammatkulkelas($kode_jm_kelas, Request $request){
+        $hari = $request->hari;
+        $kodejammatkul = $request->kode_jam_matkul;
+        
+        DB::beginTransaction();
+        try {
+            //Hapus Data sebelumnya
+            DB::table('konfigurasi_jm_kelas_detail')->where('kode_jm_kelas', $kode_jm_kelas)->delete();
+            
+            for($i=0; $i<count($hari);$i++){
+                $data[] = [
+                    'kode_jm_kelas' => $kode_jm_kelas,
+                    'hari' => $hari[$i],
+                    'kode_jam_matkul' => $kodejammatkul[$i]
+                ];
+            }
+            //diinput dalam tabel konfigurasi_jm_kelas_detail
+            Setjammatkulkelas::insert($data);
+            DB::commit();
+            return redirect('/konfigurasi/jammatkulkelas')->with(['success' => 'Data Berhasil Disimpan!']);
+        } catch (\Exception $e) {
+            //Jika eror akan ditarik ulang (Rollback)
+            DB::rollback();
+            return redirect('/konfigurasi/jammatkulkelas')->with(['warning' => 'Data Gagal Disimpan!']);
+        }
+    }
     
+
+    public function showjammatkulkelas($kode_jm_kelas){
+        $jammatkul = DB::table('jam_matkul')->orderBy('nama_jam_matkul')->get();
+        $kelas = DB::table('prodi')->get();
+        $jam_matkul_kelas = DB::table('konfigurasi_jm_kelas')
+            ->where('kode_jm_kelas', $kode_jm_kelas)
+            ->first();
+        $jam_matkul_kelas_detail = DB::table('konfigurasi_jm_kelas_detail')
+            ->join('jam_matkul', 'konfigurasi_jm_kelas_detail.kode_jam_matkul', '=', 'jam_matkul.kode_jam_matkul')
+            ->where('kode_jm_kelas', $kode_jm_kelas)
+            ->get();
+        return view('konfigurasi.showjammatkulkelas', compact('jammatkul', 'kelas','jam_matkul_kelas','jam_matkul_kelas_detail'));
+    }
+
+    public function deletejammatkulkelas($kode_jm_kelas){
+        try {
+            //Querry menghapus data
+            DB::table('konfigurasi_jm_kelas')->where('kode_jm_kelas', $kode_jm_kelas)->delete();
+            return Redirect::back()->with(['success' => 'Data Berhasil Dihapus']);
+        } catch (\Exception $e) {
+            //throw $th;
+            return Redirect::back()->with(['warning' => 'Data Gagal Dihapus']);
+        }
+    }
 }

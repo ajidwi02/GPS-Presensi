@@ -100,5 +100,15 @@ Route::middleware(['auth:user'])->group(function(){
     Route::post('/konfigurasi/{kode_jam_matkul}/delete', [konfigurasiController::class, 'deletejammatkul']);
     Route::get('/konfigurasi/{nim}/setjammatkul', [konfigurasiController::class, 'setjammatkul']);
     Route::post('/konfigurasi/storesetjammatkul', [konfigurasiController::class, 'storesetjammatkul']);
-    Route::post('/konfigurasi/updatesetjammatkul', [konfigurasiController::class, 'updatesetjammatkul']);
+    Route::post('/konfigurasi/updatesetjammatkul', [konfigurasiController::class, 'updatesetjammatkul']);   
+
+    
+    Route::get('/konfigurasi/jammatkulkelas', [konfigurasiController::class, 'jammatkulkelas']);   
+    Route::get('/konfigurasi/jammatkulkelas/create', [konfigurasiController::class, 'createjammatkulkelas']);   
+    Route::post('/konfigurasi/jammatkulkelas/store', [konfigurasiController::class, 'storejammatkulkelas']);  
+    Route::get('/konfigurasi/jammatkulkelas/{kode_jm_kelas}/edit', [konfigurasiController::class, 'editjammatkulkelas']);   
+    Route::get('/konfigurasi/jammatkulkelas/{kode_jm_kelas}/show', [konfigurasiController::class, 'showjammatkulkelas']);   
+    Route::post('/konfigurasi/jammatkulkelas/{kode_jm_kelas}/update', [konfigurasiController::class, 'updatejammatkulkelas']);  
+    Route::get('/konfigurasi/jammatkulkelas/{kode_jm_kelas}/delete', [konfigurasiController::class, 'deletejammatkulkelas']);   
+    
 });

@@ -231,6 +231,9 @@
                 <a class="dropdown-item {{ request()->is(['konfigurasi/jammatkul']) ? 'active' : '' }}" href="/konfigurasi/jammatkul">
                   Jam Mata Kuliah
                 </a>
+                <a class="dropdown-item {{ request()->is(['konfigurasi/jammatkulkelas']) ? 'active' : '' }}" href="/konfigurasi/jammatkulkelas">
+                  Jam Mata Kuliah Kelas
+                </a>
               </div>
             </div>
           </div>
